@@ -1,13 +1,17 @@
 <template>
 	<div class="brews">
-		<h2>Brew Search</h2>
+		<h2>Brew Search: {{ brewStore }}</h2>
+		<router-link to="MoreInfo"><h3>More Info</h3></router-link>
 		<section>
 			<form @submit.prevent="submitted">
 				<input type="text" v-model="val" />
 				<button>Submit</button>
 			</form>
 		</section>
-
+		<div v-if="error">
+			<h2>erorr!! {{ error }}</h2>
+		</div>
+		<div v-if="fetching"><h2>Fetching Data!</h2></div>
 		<div class="search-results" v-for="brewery in list" :key="brewery.id">
 			<ul>
 				<li>
@@ -30,9 +34,18 @@
 <script>
 // import { ref, reactive, toRefs } from '@vue/composition-api';
 import useBrewList from '../composition/use-brew-list';
+import { useStore } from '../composition/use-store';
 export default {
 	setup() {
-		const { submitted, list, val } = useBrewList();
+		// console.log(props);
+		// $store.commit('SET_STORE', { test: 'Julian' });
+		// const brewStore = $store.getters.brews;
+		const store = useStore();
+
+		const { val, list, submitted, error, fetching } = useBrewList();
+		store.commit('SET_STORE', list);
+		const brewStore = store.getters.brews;
+		return { val, list, submitted, error, fetching, brewStore };
 		// const val = ref('');
 		// const breweries = reactive({ list: [] });
 		// const submitted = async () => {
@@ -42,7 +55,6 @@ export default {
 		// 	console.log(response);
 		// 	breweries.list = response;
 		// };
-		return { val, list, submitted };
 	}
 	// data() {
 	// 	return {
@@ -86,5 +98,8 @@ li {
 }
 .brew {
 	font-weight: bold;
+}
+a {
+	text-decoration: none;
 }
 </style>

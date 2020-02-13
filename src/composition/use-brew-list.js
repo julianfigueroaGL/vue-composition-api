@@ -1,13 +1,23 @@
 import { ref, toRefs, reactive } from '@vue/composition-api';
+import useFetch from './use-fetch';
+
 export default function() {
+	const breweries = reactive({ list: [], error: null, fetching: false });
 	const val = ref('');
-	const breweries = reactive({ list: [] });
 	const submitted = async () => {
-		const response = await fetch(`https://api.openbrewerydb.org/breweries/?by_name=${val.value}`).then(res =>
-			res.json()
+		// const response = await fetch(`https://api.openbrewerydb.org/breweries/?by_name=${val.value}`).then(res =>
+		// 	res.json()
+		// );
+		// console.log(response);
+		// breweries.list = response;
+		const { response, error, fetchData, fetching } = useFetch(
+			`https://api.openbrewerydb.org/breweries/?by_name=${val.value}`,
+			{}
 		);
-		console.log(response);
+		fetchData();
 		breweries.list = response;
+		breweries.error = error;
+		breweries.fetching = fetching;
 	};
 	return { val, ...toRefs(breweries), submitted };
 }

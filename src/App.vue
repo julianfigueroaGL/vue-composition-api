@@ -1,16 +1,24 @@
 <template>
 	<div id="app">
-		<SearchBrews />
+		<!-- <MoreInfo />
+		<SearchBrews /> -->
+		<router-view />
 	</div>
 </template>
 
 <script>
-import SearchBrews from './components/SearchBrews.vue';
+// import SearchBrews from './components/SearchBrews.vue';
+// import MoreInfo from './components/MoreInfo.vue';
 
+import { provideStore } from './composition/use-store';
 export default {
+	setup(props, { root: { $store } }) {
+		provideStore($store);
+	},
 	name: 'App',
 	components: {
-		SearchBrews
+		// SearchBrews,
+		// MoreInfo
 	}
 };
 </script>
